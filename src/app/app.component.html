@@ -1,0 +1,88 @@
+<label>Введите свое имя </label>
+<input [(ngModel)]='Name' placeholder='Pavel?'>
+<br>
+Добро пожаловать {{ Name }}
+<table>
+  <tr style="border-bottom: solid black 1px;">
+      <td>Name</td>
+      <td>Id</td>
+      <td>Description</td>
+      <td>Amount</td>
+      <td>RecivedDate</td>
+      <td>Type</td>
+  </tr>
+  <tr *ngFor='let item of Items'>
+      <td>{{item.name}}</td>
+      <td>{{item.id}}</td>
+      <td>{{item.description}}</td>
+      <td>{{item.amount}}</td>
+      <td>{{item.recivedDate}}</td>
+      <td>{{item.type}}</td>
+      <button (click)='Delete(item.id)'>Удалить</button>
+      <button (click)='Change(item.id)'>Редактировать</button>
+  </tr>
+</table>
+
+<label>Создание нового товара</label>
+<button (click)=add_open()>Открыть</button>
+<table *ngIf='Add_open'>
+    <tr style="border-bottom: solid black 1px;">
+        <td>Name</td>
+        <td>Id</td>
+        <td>Description</td>
+        <td>Amount</td>
+        <td>RecivedDate</td>
+        <td>Type</td>
+        <td>Submit</td>
+    </tr>
+    <tr>
+        <td><input [(ngModel)]='name' placeholder='Name'></td>
+        <td><input [(ngModel)]='id' placeholder='Id'></td>
+        <td><input [(ngModel)]='description' placeholder='Description'></td>
+        <td><input [(ngModel)]='amount' placeholder='Amount'></td>
+        <td><input [(ngModel)]='recivedDate' placeholder='RecivedDate'></td>
+        <td>
+          <select [(ngModel)]='type' placeholder='Type'>
+              <option value='None'>Пусто</option>
+              <option value='Полезно для здоровья'>Полезно для здоровья</option>
+              <option value='Полезно для работы'>Полезно для работы</option>
+              <option value='Будет полезно в доме'>Будет полезно в доме</option>
+              <option value=Будет полезно на рыбалке>Будет полезно на рыбалке</option>
+          </select>
+        </td>
+        <td><button (click)="Submit()">Submit</button></td>
+    </tr>
+</table>
+
+<br>
+
+<label>Редактирование товара</label>
+<button (click)=change_open()>Открыть</button>
+<table *ngIf='Change_open'>
+    <tr style="border-bottom: solid black 1px;">
+        <td>Name</td>
+        <td>Id</td>
+        <td>Description</td>
+        <td>Amount</td>
+        <td>RecivedDate</td>
+        <td>Type</td>
+        <td>Submit</td>
+    </tr>
+    <tr>  
+        <td><input [(ngModel)]='name' placeholder='Name'></td>
+        <td><input [(ngModel)]='id' placeholder='Id'></td>
+        <td><input [(ngModel)]='description' placeholder='Description'></td>
+        <td><input [(ngModel)]='amount' placeholder='Amount'></td>
+        <td><input [(ngModel)]='recivedDate' placeholder='RecivedDate'></td>
+        <td>
+          <select [(ngModel)]='type' placeholder='Type'>
+              <option value='Пусто'>Пусто</option>
+              <option value='Полезно для здоровья'>Полезно для здоровья</option>
+              <option value='Полезно для работы'>Полезно для работы</option>
+              <option value='Будет полезно в доме'>Будет полезно в доме</option>
+              <option value='Будет полезно на рыбалке'>Будет полезно на рыбалке</option>
+          </select>
+        </td>
+        <td><button (click)="Apply()">Apply</button></td>
+    </tr>
+</table>
