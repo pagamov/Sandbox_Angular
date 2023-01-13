@@ -1,0 +1,44 @@
+<div *ngIf="this.logged == false" style="font-size: 20px;">
+    You need to be logged in!
+</div>
+
+<div *ngIf="this.logged == true">
+    <div style="padding-top: 10px;" style="font-size: 20px;">
+        Create with
+        <button>modal form</button> or 
+        <button>reactive form</button>
+    </div>
+    
+    <div style="padding-top: 10px;">
+        <table style="font-size: 20px;">
+            <tr>
+                <th>
+                    Task    
+                    <button (click)="sortTasks('Task')">{{sorted[0]}}</button>
+                </th>
+                <th>
+                    Priority    
+                    <button (click)="sortTasks('Priority')">{{sorted[1]}}</button>
+                </th>
+                <th>
+                    Time    
+                    <button (click)="sortTasks('Time')">{{sorted[2]}}</button>
+                </th>
+                <th>Editing with</th>
+                <th>Deleting</th>
+            </tr>
+            <tr *ngFor="let item of tasks; index as i;">
+                <td>{{item.description}}</td>
+                <td>{{item.priority}}</td>
+                <td>{{item.time}}</td>
+                <td>
+                    <button (click)="changeModal(item, i)">modal form</button> or 
+                    <button (click)="changeReactive(item, i)">reactive form</button>
+                </td>
+                <td style="text-align: center;">
+                    <button style="width: 100%;" (click)="deleteItem(i)">delete</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
