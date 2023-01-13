@@ -43,42 +43,41 @@ export class HomeComponent {
 
   sortTasks(item : string) : void {
     if (item == 'Task') {
-      this.sorted[1] = '○';
-      this.sorted[2] = '○';
+      this.sorted[1] = '○'; this.sorted[2] = '○';
       if (this.sorted[0] == '○') {
-        // sort from max to min
+        this.tasks.sort((a : {description: string}, b : {description: string}) => a.description < b.description ? -1 : (a.description > b.description ? 1 : 0));
         this.sorted[0] = '↓';
       } else if (this.sorted[0] == '↓') {
-        // sort from min to max
+        this.tasks.sort((a : {description: string}, b : {description: string}) => a.description < b.description ? -1 : (a.description > b.description ? 1 : 0)).reverse();
         this.sorted[0] = '↑';
       } else if (this.sorted[0] == '↑') {
-        // return to normal state
+        // take copy of tasks from local store
         this.sorted[0] = '○';
       }
     } else if (item == 'Priority') {
-      this.sorted[0] = '○';
-      this.sorted[2] = '○';
+      this.sorted[0] = '○'; this.sorted[2] = '○';
+      // need to take care of priority (now its working because of me having great luck :D)
       if (this.sorted[1] == '○') {
-        // sort from max to min
+        this.tasks.sort((a : {priority: string}, b : {priority: string}) => a.priority < b.priority ? -1 : (a.priority > b.priority ? 1 : 0));
         this.sorted[1] = '↓';
       } else if (this.sorted[1] == '↓') {
-        // sort from min to max
+        this.tasks.sort((a : {priority: string}, b : {priority: string}) => a.priority < b.priority ? -1 : (a.priority > b.priority ? 1 : 0)).reverse();
         this.sorted[1] = '↑';
       } else if (this.sorted[1] == '↑') {
-        // return to normal state
+        // take copy of tasks from local store
         this.sorted[1] = '○';
       }
     } else if (item == 'Time') {
-      this.sorted[0] = '○';
-      this.sorted[1] = '○';
+      this.sorted[0] = '○'; this.sorted[1] = '○';
+      // change time to Date and change comp function
       if (this.sorted[2] == '○') {
-        // sort from max to min
+        this.tasks.sort((a : {time: string}, b : {time: string}) => a.time < b.time ? -1 : (a.time > b.time ? 1 : 0));
         this.sorted[2] = '↓';
       } else if (this.sorted[2] == '↓') {
-        // sort from min to max
+        this.tasks.sort((a : {time: string}, b : {time: string}) => a.time < b.time ? -1 : (a.time > b.time ? 1 : 0)).reverse();
         this.sorted[2] = '↑';
       } else if (this.sorted[2] == '↑') {
-        // return to normal state
+        // take copy of tasks from local store
         this.sorted[2] = '○';
       }
     }
