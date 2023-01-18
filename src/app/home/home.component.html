@@ -1,42 +1,42 @@
-<div *ngIf="this.logged == false" style="font-size: 20px;">
-    You need to be logged in!
+<div *ngIf="!this.logged" class="font">
+    {{text.needlogin}}
 </div>
 
-<div *ngIf="this.logged == true">
-    <div style="padding-top: 10px;" style="font-size: 20px;">
-        Create with
-        <button>modal form</button> or 
-        <button>reactive form</button>
+<div *ngIf="this.logged">
+    <div class="pad font">
+        {{text.cwith}}
+        <button>{{text.modal}}</button> 
+        <button>{{text.reactive}}</button>
     </div>
     
-    <div style="padding-top: 10px;">
-        <table style="font-size: 20px;">
+    <div class="pad">
+        <table class="font border">
             <tr>
-                <th>
-                    Task    
+                <th class="border">
+                    {{text.task}}    
                     <button (click)="sortTasks('Task')">{{sorted[0]}}</button>
                 </th>
-                <th>
-                    Priority    
+                <th class="border">
+                    {{text.priority}}    
                     <button (click)="sortTasks('Priority')">{{sorted[1]}}</button>
                 </th>
-                <th>
-                    Time    
+                <th class="border">
+                    {{text.time}}    
                     <button (click)="sortTasks('Time')">{{sorted[2]}}</button>
                 </th>
-                <th>Editing with</th>
-                <th>Deleting</th>
+                <th class="border">{{text.edit}}</th>
+                <th class="border">{{text.delete}}</th>
             </tr>
             <tr *ngFor="let item of tasks; index as i;">
-                <td>{{item.description}}</td>
-                <td>{{item.priority}}</td>
-                <td>{{item.time}}</td>
-                <td>
-                    <button (click)="changeModal(item, i)">modal form</button> or 
-                    <button (click)="changeReactive(item, i)">reactive form</button>
+                <td class="border">{{item.description}}</td>
+                <td class="border">{{item.priority}}</td>
+                <td class="border">{{item.time}}</td>
+                <td class="border">
+                    <button (click)="changeModal(item, i)">{{text.modal}}</button>
+                    <button (click)="changeReactive(item, i)">{{text.reactive}}</button>
                 </td>
-                <td style="text-align: center;">
-                    <button style="width: 100%;" (click)="deleteItem(i)">delete</button>
+                <td class="border center">
+                    <button class="width" (click)="deleteItem(i)">{{text.del}}</button>
                 </td>
             </tr>
         </table>

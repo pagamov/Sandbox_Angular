@@ -7,8 +7,17 @@ import { LocalService } from '../local.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
 export class LoginComponent {
   constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router) {}
+
+  text = {
+    username: 'Username',
+    name_req: 'Name is required.',
+    pass: 'Password',
+    pass_req: 'Password is required.',
+    log_in: 'Log in'
+  };
 
   login : string = '';
   password : string = '';
@@ -17,13 +26,13 @@ export class LoginComponent {
   passwordError : boolean = false;
 
   logIn() : void {
-    if (this.localStore.getData(this.login) == this.password) {
+    if (this.localStore.getData(this.login) === this.password) {
       // local store contains login and psw
       this.router.navigate(['/home'], { queryParams: { UserLogin: this.login } });
     } else if (this.localStore.getData(this.login) == null) {
-      if (this.login == '' || this.password == '') {
-        this.loginError = true ? this.login == '' : false;
-        this.passwordError = true ? this.password == '' : false;
+      if (this.login === '' || this.password === '') {
+        this.loginError = true ? this.login === '' : false;
+        this.passwordError = true ? this.password === '' : false;
       } else {
         alert('No user with this login');
       }

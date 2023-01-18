@@ -1,19 +1,29 @@
-<div style="font-size: 20px;">
-    <div style="width: 20%; margin-left: 40%; margin-top: 10px">
-        Username
+<div class="font">
+    <div class="width">
+        {{text.user}}
         <div *ngIf="loginValue.errors?.['required'] && this.loginError">
-            Name is required.
-        </div> <br>
-        <input [(ngModel)]="login" id="loginValue" style="width: 100%;" type="text" required #loginValue="ngModel">
+            {{text.name_req}}
+        </div>
+        <br>
+        <input  class="width_i"
+                [(ngModel)]="login"
+                type="text" 
+                required 
+                #loginValue="ngModel">
     </div>
-    <div style="width: 20%; margin-left: 40%; margin-top: 10px;">
-        Password
+    <div class="width">
+        {{text.pass}}
         <div *ngIf="passwordValue.errors?.['required'] && this.passwordError">
-            Password is required.
-        </div> <br>
-        <input [(ngModel)]="password" id="passwordValue" placeholder="" style="width: 100%;" type="password" required #passwordValue="ngModel">
+            {{text.pass_req}}
+        </div>
+        <br>
+        <input  class="width_i"
+                [(ngModel)]="password" 
+                type="password" 
+                required 
+                #passwordValue="ngModel">
     </div>
-    <div style="width: 20%; margin-left: 40%; margin-top: 10px">
-        <button (click)="createNewUser()" style="margin-left: 38%;">Sign Up</button>
+    <div class="width">
+        <button (click)="createNewUser()" class="m_left">{{text.sign}}</button>
     </div>
 </div>

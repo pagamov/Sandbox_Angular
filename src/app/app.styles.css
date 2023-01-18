@@ -1,13 +1,7 @@
-td {
-  text-align: center;
+.t_a {
+  text-align: left; padding: 10px; font-size: 20px;
 }
-table { 
-  border-collapse: collapse; 
-}
-tr { 
-  border: none; 
-}
-td {
-  border-right: solid black 1px; 
-  border-left: solid black 1px;
+
+.m_r {
+  margin-right: 40px;
 }

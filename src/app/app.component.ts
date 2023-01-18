@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
 })
 
 export class AppComponent {
-
+  text = {
+    home: 'Home',
+    login: 'Login',
+    sign: 'Sign'
+  };
 }
