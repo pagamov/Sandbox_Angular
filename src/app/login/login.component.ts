@@ -25,10 +25,20 @@ export class LoginComponent {
   loginError : boolean = false;
   passwordError : boolean = false;
 
+  hash1() : string {
+    const v = '0123456789abcdefghigklmnopqrstuvwxyz'.split('');
+    let res : string = '';
+    for (let i = 0; i < 10; i++) {
+      res += v[Math.floor(Math.random()*v.length)];
+    }
+    return res;
+  }
+
   logIn() : void {
     if (this.localStore.getData(this.login) === this.password) {
-      // local store contains login and psw
-      this.router.navigate(['/home'], { queryParams: { UserLogin: this.login } });
+      const token = this.hash1();
+      this.localStore.saveData(token, 'true');
+      this.router.navigate(['/home'], { queryParams: { UserLogin: this.login, token: token } });
     } else if (this.localStore.getData(this.login) == null) {
       if (this.login === '' || this.password === '') {
         this.loginError = true ? this.login === '' : false;

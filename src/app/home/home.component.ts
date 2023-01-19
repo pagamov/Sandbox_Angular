@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-// import { MatDialogModule } from '@angular/material/dialog';
-// import { MatButtonModule } from '@angular/material/button';
-// import { MatBasicComponent } from './ng-material/mat-basic/mat-basic.component';
 
 import { LocalService } from '../local.service';
 
 enum arrors {up = '↑', down = '↓', def = '○'};
+enum options {'Важно', 'Важно но лень', 'Не важно'};
 
 @Component({
   selector: 'app-home',
@@ -15,9 +14,21 @@ enum arrors {up = '↑', down = '↓', def = '○'};
 })
 
 export class HomeComponent {
-  constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router) {}
-
+  constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router, fb: FormBuilder) {
+    this.form_create = fb.group({
+      description: ['', [Validators.required]],
+      priority: ['', [Validators.required]],
+      time: ['', [Validators.required]]
+    });
+    this.form_change = fb.group({
+      description: ['', [Validators.required]],
+      priority: ['', [Validators.required]],
+      time: ['', [Validators.required]]
+    });
+  }
+  
   text = {
+    welcome: 'Welcome',
     needlogin: 'You need to be logged in!',
     cwith: 'Create with',
     modal: 'modal form',
@@ -27,33 +38,48 @@ export class HomeComponent {
     time: 'Time',
     edit: 'Editing with',
     delete: 'Deleting',
-    del: 'delete'
+    del: 'delete',
+    submit: 'Submit'
   };
 
+  form_create: FormGroup;
+  form_change : FormGroup;
+  t : string = '';
+  name : string = '';
   login : string = '';
-  logged : boolean = true; // then change to false and repair token 
+  token : string = '';
+  logged : boolean = false;
   sorted = [arrors.def, arrors.def, arrors.def];
-
-  tasks = [
-    {description: 'Погулять с собакой', priority: 'Важно но лень', time: '06:00'},
-    {description: 'Дописать функционал', priority: 'Важно', time: '12:15'},
-    {description: 'Выпить воды', priority: 'Не важно', time: '21:00'},
-    {description: 'Выучить как отцентровать div', priority: 'Важно', time: '00:00'}
-  ];
-
-  options = [
-    'Важно', 'Важно но лень', 'Не важно'
-  ];
+  createVisible : boolean = false;
+  changeVisible : boolean = false;
+  toBeChanged : number = -1;
+  
+  tasks = [{description: '', priority: '', time: ''}];
 
   ngOnInit () {
     // taking params from URL query; mosty from log and sign pages via RouterChange
     this.route.queryParamMap.subscribe(params => {
         this.login = params.get('UserLogin') || '';
-        if (this.login != '') {
-          this.logged = true;
-        }
+        this.token = params.get('token') || '';
       }
     );
+    
+    if (this.login != '' && this.localStore.getData(this.token) === 'true') {
+      this.logged = true;
+      this.name = this.localStore.getData(this.login + 'name') || '';
+      this.tasks = JSON.parse(this.localStore.getData(this.login + 'data') || '');
+      this.t = JSON.stringify(this.tasks);
+    }
+  }
+
+  ngDoCheck () {}
+
+  ngOnDestroy() {
+    this.logged = false;
+    if (this.token != '' && this.localStore.getData(this.token) === 'true') {
+      this.localStore.saveData(this.token, 'false');
+      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
+    }
   }
 
   sortTasks(item : string) : void {
@@ -71,13 +97,12 @@ export class HomeComponent {
             this.sorted[0] = arrors.up;
             break;
           case arrors.up:
-            // take copy of tasks from local store
             this.sorted[0] = arrors.def;
+            this.tasks = JSON.parse(this.localStore.getData(this.login + 'data') || '');
         }
         break;
       case 'Priority':
         this.sorted[0] = arrors.def; this.sorted[2] = arrors.def;
-        // need to take care of priority (now its working because of me having great luck :D)
         function cmp2 (a : {priority: string}, b : {priority: string}) {return a.priority < b.priority ? -1 : (a.priority > b.priority ? 1 : 0)}
         switch (this.sorted[1]) {
           case arrors.def:
@@ -89,13 +114,12 @@ export class HomeComponent {
             this.sorted[1] = arrors.up;
             break;
           case arrors.up:
-            // take copy of tasks from local store
             this.sorted[1] = arrors.def;
+            this.tasks = JSON.parse(this.localStore.getData(this.login + 'data') || '');
         }
         break;
       case 'Time':
         this.sorted[0] = arrors.def; this.sorted[1] = arrors.def;
-        // change time to Date and change comp function
         function cmp3 (a : {time: string}, b : {time: string}) {return a.time < b.time ? -1 : (a.time > b.time ? 1 : 0)}
         switch (this.sorted[2]) {
           case arrors.def:
@@ -107,8 +131,8 @@ export class HomeComponent {
             this.sorted[2] = arrors.up;
             break;
           case arrors.up:
-            // take copy of tasks from local store
             this.sorted[2] = arrors.def;
+            this.tasks = JSON.parse(this.localStore.getData(this.login + 'data') || '');
         }
     }
   }
@@ -118,20 +142,34 @@ export class HomeComponent {
   }
 
   createReactive() : void {
-
+    this.tasks.push({ description: this.form_create.value.description, 
+                      priority: this.form_create.value.priority, 
+                      time: this.form_create.value.time});
+    this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
+    this.form_create.reset();
+    this.createVisible = false;
   }
 
-  changeModal(item : {}, i : number) : void {
+  changeModal(i : number) : void {
 
   } 
 
-  changeReactive(item : {}, i : number) : void {
-
+  changeReactive(i : number) : void {
+    if (i >= 0 && i < this.tasks.length) {
+      this.tasks[i] = { description: this.form_change.value.description, 
+                        priority: this.form_change.value.priority, 
+                        time: this.form_change.value.time}
+      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
+      this.form_change.reset();
+      this.changeVisible = false;
+      this.toBeChanged = -1;
+    }
   }
 
   deleteItem(i : number) : void {
     if (confirm('You wont to delete?')) {
-      this.tasks.splice(i, 1); 
+      this.tasks.splice(i, 1);
+      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
     }
   }
 }

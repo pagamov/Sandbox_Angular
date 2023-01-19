@@ -5,7 +5,7 @@ import { SignComponent } from './sign/sign.component';
 import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', title: 'Login', component: LoginComponent },
   { path: 'sign', title: 'Sign', component: SignComponent },
   { path: 'home', title: 'Home', component: HomeComponent}

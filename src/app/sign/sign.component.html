@@ -1,8 +1,20 @@
 <div class="font">
     <div class="width">
+        {{text.name}}
+        <div *ngIf="name_user.errors?.['required'] && this.nameError">
+            {{text.name_req}}
+        </div>
+        <br>
+        <input  class="width_i"
+                [(ngModel)]="name"
+                type="text" 
+                required 
+                #name_user="ngModel">
+    </div>
+    <div class="width">
         {{text.user}}
         <div *ngIf="loginValue.errors?.['required'] && this.loginError">
-            {{text.name_req}}
+            {{text.user_req}}
         </div>
         <br>
         <input  class="width_i"

@@ -3,10 +3,61 @@
 </div>
 
 <div *ngIf="this.logged">
+    Name: {{name}}
+    Login: {{login}}
+    Tasks: {{t}}
+    <div *ngIf="this.name != ''">
+        {{text.welcome}} {{name}}
+    </div>
     <div class="pad font">
         {{text.cwith}}
         <button>{{text.modal}}</button> 
-        <button>{{text.reactive}}</button>
+        <button (click)="this.createVisible=!this.createVisible">{{text.reactive}}</button>
+    </div>
+    <div *ngIf="this.createVisible" class="pad font">
+        <form [formGroup]="form_create" (submit)="createReactive()">
+            <table>
+                <tr>
+                    <td>{{text.task}}</td>
+                    <td><input formControlName="description"/></td>
+                </tr>
+                <tr>
+                    <td>{{text.priority}}</td>
+                    <td><input formControlName="priority"/></td>
+                </tr>
+                <tr>
+                    <td>{{text.time}}</td>
+                    <td><input formControlName="time"/></td>
+                </tr>
+                <tr *ngIf="this.form_create.valid">
+                    <td></td>
+                    <td><button type="submit">{{text.submit}}</button></td>
+                </tr>
+            </table>
+        </form>      
+    </div>
+
+    <div *ngIf="changeVisible" class="pad font">
+        <form [formGroup]="form_change" (submit)="changeReactive(toBeChanged)">
+            <table>
+                <tr>
+                    <td>{{text.task}}</td>
+                    <td><input formControlName="description"/></td>
+                </tr>
+                <tr>
+                    <td>{{text.priority}}</td>
+                    <td><input formControlName="priority"/></td>
+                </tr>
+                <tr>
+                    <td>{{text.time}}</td>
+                    <td><input formControlName="time"/></td>
+                </tr>
+                <tr *ngIf="form_change.valid">
+                    <td></td>
+                    <td><button type="submit">{{text.submit}}</button></td>
+                </tr>
+            </table>
+        </form>      
     </div>
     
     <div class="pad">
@@ -32,8 +83,9 @@
                 <td class="border">{{item.priority}}</td>
                 <td class="border">{{item.time}}</td>
                 <td class="border">
-                    <button (click)="changeModal(item, i)">{{text.modal}}</button>
-                    <button (click)="changeReactive(item, i)">{{text.reactive}}</button>
+                    <button (click)="changeModal(i)">{{text.modal}}</button>
+                    <button (click)="changeVisible=!this.changeVisible;
+                                     toBeChanged=changeVisible ? i : -1">{{text.reactive}}</button>
                 </td>
                 <td class="border center">
                     <button class="width" (click)="deleteItem(i)">{{text.del}}</button>
