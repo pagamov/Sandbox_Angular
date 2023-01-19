@@ -203,7 +203,7 @@ export class HomeComponent {
   }
 
   deleteItem (i : number) : void {
-    if (confirm('You wont to delete?')) {
+    if (confirm('You want to delete?')) {
       this.tasks.splice(i, 1);
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
     }
