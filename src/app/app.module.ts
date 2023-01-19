@@ -10,12 +10,15 @@ import { LoginComponent } from './login/login.component';
 import { SignComponent } from './sign/sign.component';
 import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { CreateModalComponent } from './home/create-modal/create-modal.component';
+import { ChangeModalComponent } from './home/change-modal/change-modal.component';
 
 
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, SignComponent, HomeComponent],
-  imports: [BrowserModule, FormsModule, AppRoutingModule, BrowserAnimationsModule, ReactiveFormsModule],
+  declarations: [AppComponent, LoginComponent, SignComponent, HomeComponent, CreateModalComponent, ChangeModalComponent],
+  imports: [MatSlideToggleModule, BrowserModule, FormsModule, AppRoutingModule, BrowserAnimationsModule, ReactiveFormsModule],
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { LocalService } from '../local.service';
 
 enum arrors {up = '↑', down = '↓', def = '○'};
@@ -70,20 +69,17 @@ export class HomeComponent {
 
 
   ngOnInit () {
-    // taking params from URL query; mosty from log and sign pages via RouterChange
     this.route.queryParamMap.subscribe(params => {
         this.login = params.get('UserLogin') || '';
         this.token = params.get('token') || '';
       }
     );
-    
     if (this.login != '' && this.localStore.getData(this.token) === 'true') {
       this.logged = true;
       this.name = this.localStore.getData(this.login + 'name') || '';
       this.tasks = JSON.parse(this.localStore.getData(this.login + 'data') || '');
       this.t = JSON.stringify(this.tasks);
     }
-
     // this.localStore.clearData();
   }
 
