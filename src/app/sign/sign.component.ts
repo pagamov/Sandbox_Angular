@@ -46,7 +46,8 @@ export class SignComponent {
         this.localStore.saveData(token, 'true');
         this.localStore.saveData(this.login, this.password);
         this.localStore.saveData(this.login + 'name', this.name);
-        this.localStore.saveData(this.login + 'data', JSON.stringify([{description: 'Ваш первый таск!', priority: 'Укажите важность задачи!', time: 'Тут можно поставить время!'}]));
+        const def_arr = [{description: 'Ваш первый таск!', priority: 'Укажите важность задачи!', time: 'Тут можно поставить время!', tags: ['']}];
+        this.localStore.saveData(this.login + 'data', JSON.stringify(def_arr));
         this.router.navigate(['/home'], { queryParams: { UserLogin: this.login, token: token } });
       } else {
         this.loginError = true ? this.login === '' : false;

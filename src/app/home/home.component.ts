@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LocalService } from '../local.service';
 
 enum arrors {up = '↑', down = '↓', def = '○'};
-enum options {'Важно', 'Важно но лень', 'Не важно'};
 
 @Component({
   selector: 'app-home',
@@ -26,7 +25,7 @@ export class HomeComponent {
       time: ['', [Validators.required]]
     });
   }
-  
+
   text = {
     welcome: 'Welcome',
     needlogin: 'You need to be logged in!',
@@ -39,9 +38,14 @@ export class HomeComponent {
     edit: 'Editing with',
     delete: 'Deleting',
     del: 'delete',
-    submit: 'Submit'
+    submit: 'Submit',
+    tags: 'Категории',
+    tag_def_opt: 'Pick a tag',
+    prio_def_opt: 'Change a priority'
   };
 
+  options = ['Важно', 'Важно но лень', 'Не важно'];
+  tags = ['Работа', 'Дом', 'Семья', 'Здоровье'];
   form_create: FormGroup;
   form_change : FormGroup;
   t : string = '';
@@ -52,9 +56,11 @@ export class HomeComponent {
   sorted = [arrors.def, arrors.def, arrors.def];
   createVisible : boolean = false;
   changeVisible : boolean = false;
+  changePriorityVisible : boolean = false;
   toBeChanged : number = -1;
   
-  tasks = [{description: '', priority: '', time: ''}];
+  tasks = [{description: '', priority: '', time: '', tags: ['']}];
+
 
   ngOnInit () {
     // taking params from URL query; mosty from log and sign pages via RouterChange
@@ -70,11 +76,13 @@ export class HomeComponent {
       this.tasks = JSON.parse(this.localStore.getData(this.login + 'data') || '');
       this.t = JSON.stringify(this.tasks);
     }
+
+    // this.localStore.clearData();
   }
 
   ngDoCheck () {}
 
-  ngOnDestroy() {
+  ngOnDestroy () {
     this.logged = false;
     if (this.token != '' && this.localStore.getData(this.token) === 'true') {
       this.localStore.saveData(this.token, 'false');
@@ -82,7 +90,7 @@ export class HomeComponent {
     }
   }
 
-  sortTasks(item : string) : void {
+  sortTasks (item : string) : void {
     switch (item) {
       case 'Task':
         this.sorted[1] = arrors.def; this.sorted[2] = arrors.def;
@@ -137,28 +145,49 @@ export class HomeComponent {
     }
   }
 
-  createModal() : void {
+  addTag (i : number, tag : string) : void {
+    if (tag != this.text.tag_def_opt && !this.tasks[i].tags.includes(tag)) {
+      this.tasks[i].tags.push(tag);
+      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
+    }
+  }
+
+  deleteTag (i : number, j : number) {
+    this.tasks[i].tags.splice(j, 1);
+    this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
+  }
+
+  changePriority (i : number, prio : string) {
+    if (prio != this.text.prio_def_opt) {
+      this.tasks[i].priority = prio;
+      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
+    }
+  }
+
+  createModal () : void {
 
   }
 
-  createReactive() : void {
+  createReactive () : void {
     this.tasks.push({ description: this.form_create.value.description, 
                       priority: this.form_create.value.priority, 
-                      time: this.form_create.value.time});
+                      time: this.form_create.value.time,
+                      tags: ['']});
     this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
     this.form_create.reset();
     this.createVisible = false;
   }
 
-  changeModal(i : number) : void {
+  changeModal (i : number) : void {
 
   } 
 
-  changeReactive(i : number) : void {
+  changeReactive (i : number) : void {
     if (i >= 0 && i < this.tasks.length) {
       this.tasks[i] = { description: this.form_change.value.description, 
                         priority: this.form_change.value.priority, 
-                        time: this.form_change.value.time}
+                        time: this.form_change.value.time,
+                        tags: ['']}
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
       this.form_change.reset();
       this.changeVisible = false;
@@ -166,7 +195,7 @@ export class HomeComponent {
     }
   }
 
-  deleteItem(i : number) : void {
+  deleteItem (i : number) : void {
     if (confirm('You wont to delete?')) {
       this.tasks.splice(i, 1);
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));

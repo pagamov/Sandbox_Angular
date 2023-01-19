@@ -75,13 +75,36 @@
                     {{text.time}}    
                     <button (click)="sortTasks('Time')">{{sorted[2]}}</button>
                 </th>
+                <th class="border">{{text.tags}}</th>
                 <th class="border">{{text.edit}}</th>
                 <th class="border">{{text.delete}}</th>
             </tr>
             <tr *ngFor="let item of tasks; index as i;">
                 <td class="border">{{item.description}}</td>
-                <td class="border">{{item.priority}}</td>
+                <td class="border">
+                    {{item.priority}}
+                    <button (click)="changePriority(i, prio.value)">+</button>
+                    <select #prio name="" id="">
+                        <option default>{{text.tag_def_opt}}</option>
+                        <option *ngFor="let opt of this.options" value="{{opt}}">
+                            {{opt}}
+                        </option>
+                    </select>
+                </td>
                 <td class="border">{{item.time}}</td>
+                <td class="border">
+                    <button (click)="addTag(i, opt.value)">+</button>
+                    <select #opt name="" id="">
+                        <option default>{{text.tag_def_opt}}</option>
+                        <option *ngFor="let tag of this.tags" value="{{tag}}">
+                            {{tag}}
+                        </option>
+                    </select>
+                    <div *ngFor="let tag of item.tags; index as j">
+                        {{tag}}
+                        <button (click)="deleteTag(i, j)">-</button>
+                    </div>
+                </td>
                 <td class="border">
                     <button (click)="changeModal(i)">{{text.modal}}</button>
                     <button (click)="changeVisible=!this.changeVisible;
