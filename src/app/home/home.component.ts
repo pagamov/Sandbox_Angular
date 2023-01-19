@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { LocalService } from '../local.service';
@@ -25,6 +25,13 @@ export class HomeComponent {
       time: ['', [Validators.required]]
     });
   }
+
+  // timeValidator(time: RegExp): ValidatorFn {
+  //   return (control: AbstractControl): ValidationErrors | null => {
+  //     const forbidden = time.test(control.value);
+  //     return forbidden ? {forbiddenName: {value: control.value}} : null;
+  //   };
+  // }
 
   text = {
     welcome: 'Welcome',
@@ -180,14 +187,14 @@ export class HomeComponent {
 
   changeModal (i : number) : void {
 
-  } 
+  }
 
   changeReactive (i : number) : void {
     if (i >= 0 && i < this.tasks.length) {
       this.tasks[i] = { description: this.form_change.value.description, 
                         priority: this.form_change.value.priority, 
                         time: this.form_change.value.time,
-                        tags: ['']}
+                        tags: this.tasks[i].tags}
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
       this.form_change.reset();
       this.changeVisible = false;

@@ -6,7 +6,7 @@
     Name: {{name}}
     Login: {{login}}
     Tasks: {{t}}
-    <div *ngIf="this.name != ''">
+    <div *ngIf="this.name != ''" class="font">
         {{text.welcome}} {{name}}
     </div>
     <div class="pad font">
@@ -23,7 +23,13 @@
                 </tr>
                 <tr>
                     <td>{{text.priority}}</td>
-                    <td><input formControlName="priority"/></td>
+                    <td>
+                        <select formControlName="priority" #prio name="" id="">
+                            <option *ngFor="let opt of this.options" value="{{opt}}">
+                                {{opt}}
+                            </option>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <td>{{text.time}}</td>
@@ -46,7 +52,13 @@
                 </tr>
                 <tr>
                     <td>{{text.priority}}</td>
-                    <td><input formControlName="priority"/></td>
+                    <td>
+                        <select formControlName="priority" #prio name="" id="">
+                            <option *ngFor="let opt of this.options" value="{{opt}}">
+                                {{opt}}
+                            </option>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <td>{{text.time}}</td>
