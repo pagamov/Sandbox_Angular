@@ -25,13 +25,6 @@ export class HomeComponent {
     });
   }
 
-  // timeValidator(time: RegExp): ValidatorFn {
-  //   return (control: AbstractControl): ValidationErrors | null => {
-  //     const forbidden = time.test(control.value);
-  //     return forbidden ? {forbiddenName: {value: control.value}} : null;
-  //   };
-  // }
-
   text = {
     welcome: 'Welcome',
     needlogin: 'You need to be logged in!',

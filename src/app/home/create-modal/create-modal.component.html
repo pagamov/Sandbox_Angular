@@ -1,1 +1,14 @@
-<p>create-modal works!</p>
+<ol>
+    <li>
+        <mat-form-field appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput [(ngModel)]="name">
+        </mat-form-field>
+    </li>
+    <li>
+        <button mat-raised-button (click)="openDialog()">Pick one</button>
+    </li>
+    <li *ngIf="animal | async as a">
+        Chose: <i>{{a}}</i>
+    </li>
+</ol>
