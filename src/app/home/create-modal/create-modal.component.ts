@@ -1,11 +1,13 @@
 import { Component, Inject, NgModule } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog , MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 export interface DialogData {
-  animal: string;
-  name: string;
+  description: string;
+  priority: string;
+  time: string;
 }
 
 @Component({
@@ -15,13 +17,16 @@ export interface DialogData {
 })
 export class DialogOverviewDialog {
   form_create: FormGroup;
+  options = ['Важно', 'Важно но лень', 'Не важно'];
 
   constructor (
     public dialogRef: MatDialogRef<DialogOverviewDialog>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData, fb: FormBuilder
   ) {
     this.form_create = fb.group({
-      animal: [data.animal]
+      description: [data.description, [Validators.required]],
+      priority: [data.priority, [Validators.required]],
+      time: [data.time, [Validators.required]]
     });
   }
 
@@ -30,7 +35,9 @@ export class DialogOverviewDialog {
   }
 
   onClick () : void {
-    this.dialogRef.close(this.form_create.get('animal')?.value);
+    this.dialogRef.close({  description: this.form_create.get('description')?.value,
+                              priority: this.form_create.get('priority')?.value,
+                              time: this.form_create.get('time')?.value});
   }
 }
 
@@ -39,20 +46,14 @@ export class DialogOverviewDialog {
   templateUrl: './create-modal.component.html',
 })
 export class CreateModalComponent {
-  animal = new BehaviorSubject<string>('');
-  name: string = '';
-
   constructor (public dialog: MatDialog) {}
-  
-  openDialog () : void {
+  public openDialog () : void {
     const DialogRef = this.dialog.open(DialogOverviewDialog, {
-      width: '250px',
-      data: {name: this.name, animal: this.animal.value},
+      data: {description: '', priority: '', time: ''},
     });
 
     DialogRef.afterClosed().subscribe(result => {
       console.log('dialog closed', result);
-      this.animal.next(result);
     })
   }
 }

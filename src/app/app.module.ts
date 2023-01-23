@@ -13,7 +13,7 @@ import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { CreateModalComponent, DialogOverviewDialog } from './home/create-modal/create-modal.component';
-import { ChangeModalComponent } from './home/change-modal/change-modal.component';
+import { ChangeModalComponent, DialogOverviewDialog_Change } from './home/change-modal/change-modal.component';
 
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
@@ -26,7 +26,7 @@ import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 @NgModule({
   declarations: [ AppComponent, LoginComponent, 
                   SignComponent, HomeComponent, 
-                  CreateModalComponent, ChangeModalComponent, DialogOverviewDialog],
+                  CreateModalComponent, ChangeModalComponent, DialogOverviewDialog, DialogOverviewDialog_Change],
   imports: [MatFormFieldModule, MatSlideToggleModule, 
             BrowserModule, FormsModule, 
             AppRoutingModule, BrowserAnimationsModule, 

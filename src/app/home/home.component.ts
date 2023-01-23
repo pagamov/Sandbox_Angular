@@ -1,7 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { LocalService } from '../local.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CreateModalComponent, DialogOverviewDialog } from './create-modal/create-modal.component';
+import { DialogOverviewDialog_Change } from './change-modal/change-modal.component';
 
 enum arrors {up = '↑', down = '↓', def = '○'};
 
@@ -12,7 +17,7 @@ enum arrors {up = '↑', down = '↓', def = '○'};
 })
 
 export class HomeComponent {
-  constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router, fb: FormBuilder) {
+  constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router, fb: FormBuilder, public dialog: MatDialog, public dialog_change: MatDialog) {
     this.form_create = fb.group({
       description: ['', [Validators.required]],
       priority: ['', [Validators.required]],
@@ -59,6 +64,10 @@ export class HomeComponent {
   toBeChanged : number = -1;
   
   tasks = [{description: '', priority: '', time: '', tags: ['']}];
+
+  description_modal_create = new BehaviorSubject<string>('');
+  priority_modal_create = new BehaviorSubject<string>('');
+  time_modal_create = new BehaviorSubject<string>('');
 
 
   ngOnInit () {
@@ -161,7 +170,24 @@ export class HomeComponent {
   }
 
   createModal () : void {
+    const DialogRef = this.dialog.open(DialogOverviewDialog, {
+      data: { description: '',
+              priority: '',
+              time: ''},
+    });
 
+    DialogRef.afterClosed().subscribe(result => {
+      this.description_modal_create.next(result.description);
+      this.priority_modal_create.next(result.priority);
+      this.time_modal_create.next(result.time);
+
+      this.tasks.push({ description: this.description_modal_create.value, 
+                        priority: this.priority_modal_create.value, 
+                        time: this.time_modal_create.value,
+                        tags: ['']});
+      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
+      this.form_create.reset();
+    })
   }
 
   createReactive () : void {
@@ -175,7 +201,24 @@ export class HomeComponent {
   }
 
   changeModal (i : number) : void {
+    const DialogRef = this.dialog_change.open(DialogOverviewDialog_Change, {
+      data: { description: '',
+              priority: '',
+              time: ''},
+    });
 
+    DialogRef.afterClosed().subscribe(result => {
+      this.description_modal_create.next(result.description);
+      this.priority_modal_create.next(result.priority);
+      this.time_modal_create.next(result.time);
+
+      this.tasks[i] = { description: this.description_modal_create.value, 
+                        priority: this.priority_modal_create.value, 
+                        time: this.time_modal_create.value,
+                        tags: this.tasks[i].tags};
+      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
+      this.form_change.reset();
+    })
   }
 
   changeReactive (i : number) : void {

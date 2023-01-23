@@ -1,18 +1,30 @@
-<h1 mat-dialog-title>Hi {{data.name}}</h1>
 <div mat-dialog-content>
-  <p>What's your favorite animal?</p>
-  <!-- <mat-form-field appearance="fill">
-    <mat-label>Favorite Animal</mat-label>
-    <input [value]="animal | async">
-  </mat-form-field> -->
-
   <form [formGroup]="form_create">
-    <input formControlName="animal">
+    <table>
+      <tr>
+        <td>Description:</td>
+        <td><input formControlName="description"></td>
+      </tr>
+      <tr>
+        <td>Priority:</td>
+        <td>
+          <select formControlName="priority" #prio name="" id="">
+            <option *ngFor="let opt of this.options" value="{{opt}}">
+                {{opt}}
+            </option>
+        </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Time:</td>
+        <td><input formControlName="time"></td>
+      </tr>
+    </table>
   </form>
-
-  
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button (click)="onClick()" cdkFocusInitial>Ok</button>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <div *ngIf="this.form_create.valid">
+    <button mat-button (click)="onClick()" cdkFocusInitial>Create</button>
+  </div>
 </div>

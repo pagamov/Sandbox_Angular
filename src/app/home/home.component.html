@@ -3,20 +3,18 @@
     {{text.needlogin}}
 </div>
 
-<div class="mat-app-background basic-container">
-  <app-create-modal>loading</app-create-modal>
-</div>
+
 
 <div *ngIf="this.logged">
-    Name: {{name}}
+    <!-- Name: {{name}}
     Login: {{login}}
-    Tasks: {{t}}
+    Tasks: {{t}} -->
     <div *ngIf="this.name != ''" class="font">
         {{text.welcome}} {{name}}
     </div>
     <div class="pad font">
         {{text.cwith}}
-        <button>{{text.modal}}</button> 
+        <button (click)="createModal()">{{text.modal}}</button> 
         <button (click)="this.createVisible=!this.createVisible">{{text.reactive}}</button>
     </div>
     <div *ngIf="this.createVisible" class="pad font">
