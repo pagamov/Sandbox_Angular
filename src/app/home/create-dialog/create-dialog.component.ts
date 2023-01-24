@@ -9,10 +9,11 @@ import { Text, DialogData, Options } from '../../app.component'
   styleUrls: ['../../../styles.css']
 })
 export class CreateDialogComponent {
-  constructor (
-    public dialogRef: MatDialogRef<CreateDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData, fb: FormBuilder
-  ) {
+  public formCreate: FormGroup;
+  public text = Text.create_dialog;
+  public options = Options;
+
+  constructor (public dialogRef: MatDialogRef<CreateDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData, fb: FormBuilder) {
     this.formCreate = fb.group({
       description: [data.description, [Validators.required]],
       priority: [data.priority, [Validators.required]],
@@ -20,17 +21,11 @@ export class CreateDialogComponent {
     });
   }
 
-  public formCreate: FormGroup;
-  public text = Text.create_dialog;
-  public options = Options;
-
   public onNoClick () : void {
     this.dialogRef.close();
   }
 
   public onClick () : void {
-    this.dialogRef.close({  description: this.formCreate.get('description')?.value,
-                            priority: this.formCreate.get('priority')?.value,
-                            time: this.formCreate.get('time')?.value});
+    this.dialogRef.close(this.formCreate.getRawValue());
   }
 }

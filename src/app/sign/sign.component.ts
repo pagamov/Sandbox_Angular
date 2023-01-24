@@ -11,15 +11,15 @@ import { Text } from '../app.component'
 })
 
 export class SignComponent {
-  constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router) {}
+  public text = Text.sign;
+  public name : string = '';
+  public login : string = '';
+  public password : string = '';
+  public nameError: boolean = false;
+  public loginError : boolean = false;
+  public passwordError : boolean = false;
 
-  text = Text.sign;
-  name : string = '';
-  login : string = '';
-  password : string = '';
-  nameError: boolean = false;
-  loginError : boolean = false;
-  passwordError : boolean = false;
+  constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router) {}
 
   private hash1 () : string {
     const v = '0123456789abcdefghigklmnopqrstuvwxyz'.split('');

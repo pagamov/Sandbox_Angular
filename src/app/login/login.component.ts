@@ -10,13 +10,13 @@ import { Text } from '../app.component'
 })
 
 export class LoginComponent {
-  constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router) {}
+  public text = Text.login;
+  public login : string = '';
+  public password : string = '';
+  public loginError : boolean = false;
+  public passwordError : boolean = false;
 
-  text = Text.login;
-  login : string = '';
-  password : string = '';
-  loginError : boolean = false;
-  passwordError : boolean = false;
+  constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router) {}
 
   private hash1 () : string {
     const v = '0123456789abcdefghigklmnopqrstuvwxyz'.split('');

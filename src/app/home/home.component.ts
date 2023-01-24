@@ -16,6 +16,22 @@ import { ChangeDialogComponent } from './change-dialog/change-dialog.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent {
+  public text = Text.home;
+  public options = Options;
+  public tags = Tags;
+  public formCreate: FormGroup;
+  public formChange : FormGroup;
+  public logged : boolean = false;
+  public sorted = [arrors.def, arrors.def, arrors.def];
+  public createVisible : boolean = false;
+  public changeVisible : boolean = false;
+  public changePriorityVisible : boolean = false;
+  public toBeChanged : number = -1;
+  public tasks = [{description: '', priority: '', time: '', tags: ['']}];
+  public name = new BehaviorSubject<string>('');
+  public login = new BehaviorSubject<string>('');
+  public token = new BehaviorSubject<string>('');
+
   constructor (private ref : ChangeDetectorRef, private localStore: LocalService, private route : ActivatedRoute, fb: FormBuilder, public dialog: MatDialog, public dialog_change: MatDialog) {
     this.formCreate = fb.group({
       description: ['', [Validators.required]],
@@ -28,22 +44,6 @@ export class HomeComponent {
       time: ['', [Validators.required]]
     });
   }
-
-  public text = Text.home;
-  public options = Options;
-  public tags = Tags;
-  public formCreate: FormGroup;
-  public formChange : FormGroup;
-  public name = new BehaviorSubject<string>('');
-  private login = new BehaviorSubject<string>('');
-  private token = new BehaviorSubject<string>('');
-  public logged : boolean = false;
-  public sorted = [arrors.def, arrors.def, arrors.def];
-  public createVisible : boolean = false;
-  public changeVisible : boolean = false;
-  public changePriorityVisible : boolean = false;
-  public toBeChanged : number = -1;
-  public tasks = [{description: '', priority: '', time: '', tags: ['']}];
 
   ngOnInit () : void {
     this.route.queryParamMap.subscribe(params => {
@@ -144,7 +144,7 @@ export class HomeComponent {
     const DialogRef = this.dialog.open(CreateDialogComponent, {
       data: { description: '',
               priority: '',
-              time: ''},
+              time: '' },
     });
 
     DialogRef.afterClosed().subscribe(result => {
@@ -157,9 +157,7 @@ export class HomeComponent {
   }
 
   public createReactive () : void {
-    this.tasks.push({ description: this.formCreate.value.description, 
-                      priority: this.formCreate.value.priority, 
-                      time: this.formCreate.value.time,
+    this.tasks.push({ ...this.formCreate.getRawValue(),
                       tags: ['']});
     this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
     this.formCreate.reset();
@@ -184,9 +182,7 @@ export class HomeComponent {
 
   public changeReactive (i : number) : void {
     if (i >= 0 && i < this.tasks.length) {
-      this.tasks[i] = { description: this.formChange.value.description, 
-                        priority: this.formChange.value.priority, 
-                        time: this.formChange.value.time,
+      this.tasks[i] = { ...this.formChange.getRawValue(),
                         tags: this.tasks[i].tags}
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
       this.formChange.reset();
