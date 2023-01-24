@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { LocalService } from '../local.service';
 import { Text, Arrors as arrors, Options, Tags } from '../app.component'
@@ -12,10 +12,11 @@ import { ChangeDialogComponent } from './change-dialog/change-dialog.component';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['../../styles.css']
+  styleUrls: ['../../styles.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent {
-  constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router, fb: FormBuilder, public dialog: MatDialog, public dialog_change: MatDialog) {
+  constructor (private ref : ChangeDetectorRef, private localStore: LocalService, private route : ActivatedRoute, fb: FormBuilder, public dialog: MatDialog, public dialog_change: MatDialog) {
     this.formCreate = fb.group({
       description: ['', [Validators.required]],
       priority: ['', [Validators.required]],
@@ -151,7 +152,8 @@ export class HomeComponent {
                         tags: ['']});
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
       this.formCreate.reset();
-    })
+      this.ref.detectChanges();
+    });
   }
 
   public createReactive () : void {
@@ -176,7 +178,8 @@ export class HomeComponent {
                         tags: this.tasks[i].tags};
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
       this.formChange.reset();
-    })
+      this.ref.detectChanges();
+    });
   }
 
   public changeReactive (i : number) : void {
@@ -199,3 +202,4 @@ export class HomeComponent {
     }
   }
 }
+

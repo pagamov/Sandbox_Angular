@@ -1,29 +1,29 @@
-<div class="font">
-    <div class="div_m">
+<div class="fontSize">
+    <div class="width">
         {{text.username}}
         <div *ngIf="loginValue.errors?.['required'] && this.loginError">
             {{text.name_req}}
         </div> 
         <br>
         <input  [(ngModel)]="login"
-                class="inp" 
+                class="widthInpDel" 
                 type="text" 
                 required
                 #loginValue="ngModel">
     </div>
-    <div class="div_m">
+    <div class="width">
         {{text.pass}}
         <div *ngIf="passwordValue.errors?.['required'] && this.passwordError">
             {{text.pass_req}}
         </div> 
         <br>
         <input  [(ngModel)]="password"
-                class="inp" 
+                class="widthInpDel" 
                 type="password" 
                 required 
                 #passwordValue="ngModel">
     </div>
-    <div class="div_m">
-        <button (click)="logIn()" class="b_m">{{text.log_in}}</button>
+    <div class="width">
+        <button (click)="logIn()">{{text.log_in}}</button>
     </div>
 </div>

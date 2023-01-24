@@ -1,17 +1,17 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block" rel="stylesheet">
-<div *ngIf="!logged" class="font">
+<div *ngIf="!logged" class="fontSize">
     {{text.needlogin}}
 </div>
 <div *ngIf="logged">
-    <div *ngIf="name.getValue() != ''" class="font">
+    <div *ngIf="name.getValue() != ''" class="fontSize">
         {{text.welcome}} {{name.getValue()}}
     </div>
-    <div class="pad font">
+    <div class="padingTop fontSize">
         {{text.cwith}}
         <button (click)="createModal()">{{text.modal}}</button> 
         <button (click)="this.createVisible=!this.createVisible">{{text.reactive}}</button>
     </div>
-    <div *ngIf="this.createVisible" class="pad font">
+    <div *ngIf="this.createVisible" class="padingTop fontSize">
         <form [formGroup]="formCreate" (submit)="createReactive()">
             <table>
                 <tr>
@@ -40,7 +40,7 @@
         </form>      
     </div>
 
-    <div *ngIf="changeVisible" class="pad font">
+    <div *ngIf="changeVisible" class="padingTop fontSize">
         <form [formGroup]="formChange" (submit)="changeReactive(toBeChanged)">
             <table>
                 <tr>
@@ -69,8 +69,8 @@
         </form>      
     </div>
     
-    <div class="pad">
-        <table class="font border">
+    <div class="padingTop">
+        <table class="fontSize border">
             <tr>
                 <th class="border">
                     {{text.task}}    
@@ -100,9 +100,9 @@
                         </option>
                     </select>
                 </td>
-                <td class="border">{{item.time}}</td>
+                <td class="border">{{ item.time }}</td>
                 <td class="border">
-                    <button (click)="addTag(i, opt.value)">+</button>
+                    <button (click)="addTag(i, opt.value)">{{ text.plus }}</button>
                     <select #opt name="" id="">
                         <option default>{{text.tag_def_opt}}</option>
                         <option *ngFor="let tag of this.tags" value="{{tag}}">
@@ -111,7 +111,7 @@
                     </select>
                     <div *ngFor="let tag of item.tags; index as j">
                         {{tag}}
-                        <button (click)="deleteTag(i, j)">-</button>
+                        <button (click)="deleteTag(i, j)">{{ text.minus }}</button>
                     </div>
                 </td>
                 <td class="border">
@@ -120,7 +120,7 @@
                                      toBeChanged=changeVisible ? i : -1">{{text.reactive}}</button>
                 </td>
                 <td class="border">
-                    <button class="width" (click)="deleteItem(i)">{{text.del}}</button>
+                    <button class="widthInpDel" (click)="deleteItem(i)">{{text.del}}</button>
                 </td>
             </tr>
         </table>

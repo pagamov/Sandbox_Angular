@@ -1,11 +1,11 @@
-<div class="font">
+<div class="fontSize">
     <div class="width">
         {{text.name}}
         <div *ngIf="name_user.errors?.['required'] && this.nameError">
             {{text.name_req}}
         </div>
         <br>
-        <input  class="width_i"
+        <input  class="widthInpDel"
                 [(ngModel)]="name"
                 type="text" 
                 required 
@@ -17,7 +17,7 @@
             {{text.user_req}}
         </div>
         <br>
-        <input  class="width_i"
+        <input  class="widthInpDel"
                 [(ngModel)]="login"
                 type="text" 
                 required 
@@ -29,13 +29,13 @@
             {{text.pass_req}}
         </div>
         <br>
-        <input  class="width_i"
+        <input  class="widthInpDel"
                 [(ngModel)]="password" 
                 type="password" 
                 required 
                 #passwordValue="ngModel">
     </div>
     <div class="width">
-        <button (click)="createNewUser()" class="m_left">{{text.sign}}</button>
+        <button (click)="createNewUser()">{{text.sign}}</button>
     </div>
 </div>

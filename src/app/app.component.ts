@@ -28,7 +28,9 @@ export const Text = {
     submit: 'Submit',
     tags: 'Tags',
     tag_def_opt: 'Pick a tag',
-    prio_def_opt: 'Change a priority'
+    prio_def_opt: 'Change a priority',
+    plus: '+',
+    minus: '-'
   },
   login: {
     username: 'Username',
