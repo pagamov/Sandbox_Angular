@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
 
+export interface Task {
+  description: string,
+  priority: string,
+  time: string,
+  tags: string[]
+};
+
 export const Tags = ['Работа', 'Дом', 'Семья', 'Здоровье'];
 
 export const Options = ['Важно', 'Важно но лень', 'Не важно'];
@@ -8,7 +15,7 @@ export interface DialogData {
   description: string;
   priority: string;
   time: string;
-}
+};
 
 export enum Arrors {up = '↑', down = '↓', def = '○'};
 

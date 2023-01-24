@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+// import 'rxjs/add/operator/first';
+import { first, take } from 'rxjs/operators';
 import { LocalService } from '../local.service';
-import { Text, Arrors as arrors, Options, Tags } from '../app.component'
+import { Text, Arrors as arrors, Options, Tags, Task } from '../app.component'
 
 import { CreateDialogComponent } from './create-dialog/create-dialog.component';
 import { ChangeDialogComponent } from './change-dialog/change-dialog.component';
@@ -27,7 +29,7 @@ export class HomeComponent {
   public changeVisible : boolean = false;
   public changePriorityVisible : boolean = false;
   public toBeChanged : number = -1;
-  public tasks = [{description: '', priority: '', time: '', tags: ['']}];
+  public tasks = new BehaviorSubject<Task[]>([{description: '', priority: '', time: '', tags: ['']}]);
   public name = new BehaviorSubject<string>('');
   public login = new BehaviorSubject<string>('');
   public token = new BehaviorSubject<string>('');
@@ -54,7 +56,7 @@ export class HomeComponent {
     if (this.login.getValue() != '' && this.localStore.getData(this.token.getValue()) === 'true') {
       this.logged = true;
       this.name.next(this.localStore.getData(this.login + 'name') || '');
-      this.tasks = JSON.parse(this.localStore.getData(this.login + 'data') || '');
+      this.tasks.next(JSON.parse(this.localStore.getData(this.login + 'data') || ''));
     }
   }
 
@@ -62,7 +64,7 @@ export class HomeComponent {
     this.logged = false;
     if (this.token.getValue() != '' && this.localStore.getData(this.token.getValue()) === 'true') {
       this.localStore.saveData(this.token.getValue(), 'false');
-      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
+      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks.getValue()));
     }
   }
 
@@ -73,16 +75,16 @@ export class HomeComponent {
         function cmp1 (a : {description: string}, b : {description: string}) {return a.description < b.description ? -1 : (a.description > b.description ? 1 : 0)}
         switch (this.sorted[0]) {
           case arrors.def:
-            this.tasks.sort(cmp1);
+            this.tasks.next(this.tasks.getValue().sort(cmp1));
             this.sorted[0] = arrors.down;
             break;
           case arrors.down:
-            this.tasks.sort(cmp1).reverse();
+            this.tasks.next(this.tasks.getValue().sort(cmp1).reverse());
             this.sorted[0] = arrors.up;
             break;
           case arrors.up:
             this.sorted[0] = arrors.def;
-            this.tasks = JSON.parse(this.localStore.getData(this.login + 'data') || '');
+            this.tasks.next(JSON.parse(this.localStore.getData(this.login + 'data') || ''));
         }
         break;
       case 'Priority':
@@ -90,16 +92,16 @@ export class HomeComponent {
         function cmp2 (a : {priority: string}, b : {priority: string}) {return a.priority < b.priority ? -1 : (a.priority > b.priority ? 1 : 0)}
         switch (this.sorted[1]) {
           case arrors.def:
-            this.tasks.sort(cmp2);
+            this.tasks.next(this.tasks.getValue().sort(cmp2));
             this.sorted[1] = arrors.down;
             break;
           case arrors.down:
-            this.tasks.sort(cmp2).reverse();
+            this.tasks.next(this.tasks.getValue().sort(cmp2).reverse());
             this.sorted[1] = arrors.up;
             break;
           case arrors.up:
             this.sorted[1] = arrors.def;
-            this.tasks = JSON.parse(this.localStore.getData(this.login + 'data') || '');
+            this.tasks.next(JSON.parse(this.localStore.getData(this.login + 'data') || ''));
         }
         break;
       case 'Time':
@@ -107,84 +109,100 @@ export class HomeComponent {
         function cmp3 (a : {time: string}, b : {time: string}) {return a.time < b.time ? -1 : (a.time > b.time ? 1 : 0)}
         switch (this.sorted[2]) {
           case arrors.def:
-            this.tasks.sort(cmp3);
+            this.tasks.next(this.tasks.getValue().sort(cmp3));
             this.sorted[2] = arrors.down;
             break;
           case arrors.down:
-            this.tasks.sort(cmp3).reverse();
+            this.tasks.next(this.tasks.getValue().sort(cmp3).reverse());
             this.sorted[2] = arrors.up;
             break;
           case arrors.up:
             this.sorted[2] = arrors.def;
-            this.tasks = JSON.parse(this.localStore.getData(this.login + 'data') || '');
+            this.tasks.next(JSON.parse(this.localStore.getData(this.login + 'data') || ''));
         }
     }
   }
 
   public addTag (i : number, tag : string) : void {
-    if (tag != this.text.tag_def_opt && !this.tasks[i].tags.includes(tag)) {
-      this.tasks[i].tags.push(tag);
-      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
+    if (tag != this.text.tag_def_opt && !this.tasks.getValue()[i].tags.includes(tag)) {
+      let tmp : Task[] = this.tasks.getValue();
+      tmp[i].tags.push(tag);
+      this.tasks.next(tmp);
+      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks.getValue()));
     }
   }
 
   public deleteTag (i : number, j : number) : void {
-    this.tasks[i].tags.splice(j, 1);
-    this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
+    let tmp : Task[] = this.tasks.getValue();
+    tmp[i].tags.splice(j, 1);
+    this.tasks.next(tmp);
+    this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks.getValue()));
   }
 
   public changePriority (i : number, prio : string) : void {
     if (prio != this.text.prio_def_opt) {
-      this.tasks[i].priority = prio;
-      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
+      let tmp : Task[] = this.tasks.getValue();
+      tmp[i].priority = prio;
+      this.tasks.next(tmp);
+      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks.getValue()));
     }
   }
 
   public createModal () : void {
     const DialogRef = this.dialog.open(CreateDialogComponent, {
-      data: { description: '',
-              priority: '',
-              time: '' },
+      disableClose: true,
+      autoFocus: true,
+      data: { description: '', priority: '', time: '' }, 
     });
 
     DialogRef.afterClosed().subscribe(result => {
-      this.tasks.push({ ...result,
-                        tags: ['']});
-      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
-      this.formCreate.reset();
-      this.ref.detectChanges();
+      if (result != null) {
+        let tmp : Task[] = this.tasks.getValue();
+        tmp.push({ ...result,
+                   tags: ['']});
+        this.tasks.next(tmp);
+        this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks.getValue()));
+        this.formCreate.reset();
+      }
     });
   }
 
   public createReactive () : void {
-    this.tasks.push({ ...this.formCreate.getRawValue(),
-                      tags: ['']});
-    this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
+    let tmp : Task[] = this.tasks.getValue();
+    tmp.push({ ...this.formCreate.getRawValue(),
+               tags: ['']});
+    this.tasks.next(tmp);
+    this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks.getValue()));
     this.formCreate.reset();
     this.createVisible = false;
   }
 
   public changeModal (i : number) : void {
     const DialogRef = this.dialog_change.open(ChangeDialogComponent, {
-      data: { description: '',
-              priority: '',
-              time: ''},
+      disableClose: true,
+      autoFocus: true,
+      data: { description: '', priority: '', time: ''},
     });
 
     DialogRef.afterClosed().subscribe(result => {
-      this.tasks[i] = { ...result,
-                        tags: this.tasks[i].tags};
-      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
-      this.formChange.reset();
-      this.ref.detectChanges();
+      if (result != null) {
+        let tmp : Task[] = this.tasks.getValue();
+        tmp[i] = { ...result,
+                   tags: tmp[i].tags};
+        this.tasks.next(tmp);
+        this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks.getValue()));
+        this.formChange.reset();
+      }
     });
   }
 
   public changeReactive (i : number) : void {
-    if (i >= 0 && i < this.tasks.length) {
-      this.tasks[i] = { ...this.formChange.getRawValue(),
-                        tags: this.tasks[i].tags}
-      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
+    if (i >= 0 && i < this.tasks.getValue().length) {
+      let tmp : Task[] = this.tasks.getValue();
+      tmp[i] = { ...this.formChange.getRawValue(),
+                 tags: tmp[i].tags}
+      this.tasks.next(tmp);
+      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks.getValue()));
       this.formChange.reset();
       this.changeVisible = false;
       this.toBeChanged = -1;
@@ -193,8 +211,10 @@ export class HomeComponent {
 
   public deleteItem (i : number) : void {
     if (confirm('You want to delete?')) {
-      this.tasks.splice(i, 1);
-      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
+      let tmp : Task[] = this.tasks.getValue();
+      tmp.splice(i, 1);
+      this.tasks.next(tmp);
+      this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks.getValue()));
     }
   }
 }

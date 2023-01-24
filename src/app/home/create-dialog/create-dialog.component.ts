@@ -22,7 +22,7 @@ export class CreateDialogComponent {
   }
 
   public onNoClick () : void {
-    this.dialogRef.close();
+    this.dialogRef.close(null);
   }
 
   public onClick () : void {
