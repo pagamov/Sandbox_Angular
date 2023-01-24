@@ -1,21 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { LocalService } from '../local.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CreateModalComponent, DialogOverviewDialog } from './create-modal/create-modal.component';
-import { DialogOverviewDialog_Change } from './change-modal/change-modal.component';
+import { Text, Arrors as arrors, Options, Tags } from '../app.component'
 
-enum arrors {up = '↑', down = '↓', def = '○'};
+import { CreateDialogComponent } from './create-dialog/create-dialog.component';
+import { ChangeDialogComponent } from './change-dialog/change-dialog.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['../../styles.css']
 })
-
 export class HomeComponent {
   constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router, fb: FormBuilder, public dialog: MatDialog, public dialog_change: MatDialog) {
     this.form_create = fb.group({
@@ -30,47 +28,27 @@ export class HomeComponent {
     });
   }
 
-  text = {
-    welcome: 'Welcome',
-    needlogin: 'You need to be logged in!',
-    cwith: 'Create with',
-    modal: 'modal form',
-    reactive: 'reactive form',
-    task: 'Task',
-    priority: 'Priority',
-    time: 'Time',
-    edit: 'Editing with',
-    delete: 'Deleting',
-    del: 'delete',
-    submit: 'Submit',
-    tags: 'Категории',
-    tag_def_opt: 'Pick a tag',
-    prio_def_opt: 'Change a priority'
-  };
-
-  options = ['Важно', 'Важно но лень', 'Не важно'];
-  tags = ['Работа', 'Дом', 'Семья', 'Здоровье'];
-  form_create: FormGroup;
-  form_change : FormGroup;
-  t : string = '';
-  name : string = '';
-  login : string = '';
-  token : string = '';
-  logged : boolean = false;
-  sorted = [arrors.def, arrors.def, arrors.def];
-  createVisible : boolean = false;
-  changeVisible : boolean = false;
-  changePriorityVisible : boolean = false;
-  toBeChanged : number = -1;
-  
-  tasks = [{description: '', priority: '', time: '', tags: ['']}];
-
-  description_modal_create = new BehaviorSubject<string>('');
-  priority_modal_create = new BehaviorSubject<string>('');
-  time_modal_create = new BehaviorSubject<string>('');
+  public text = Text.home;
+  public options = Options;
+  public tags = Tags;
+  public form_create: FormGroup;
+  public form_change : FormGroup;
+  public name : string = '';
+  public login : string = '';
+  public token : string = '';
+  public logged : boolean = false;
+  public sorted = [arrors.def, arrors.def, arrors.def];
+  public createVisible : boolean = false;
+  public changeVisible : boolean = false;
+  public changePriorityVisible : boolean = false;
+  public toBeChanged : number = -1;
+  public tasks = [{description: '', priority: '', time: '', tags: ['']}];
+  private descriptionModalCreate = new BehaviorSubject<string>('');
+  private priorityModalCreate = new BehaviorSubject<string>('');
+  private timeModalCreate = new BehaviorSubject<string>('');
 
 
-  ngOnInit () {
+  ngOnInit () : void {
     this.route.queryParamMap.subscribe(params => {
         this.login = params.get('UserLogin') || '';
         this.token = params.get('token') || '';
@@ -80,14 +58,10 @@ export class HomeComponent {
       this.logged = true;
       this.name = this.localStore.getData(this.login + 'name') || '';
       this.tasks = JSON.parse(this.localStore.getData(this.login + 'data') || '');
-      this.t = JSON.stringify(this.tasks);
     }
-    // this.localStore.clearData();
   }
 
-  ngDoCheck () {}
-
-  ngOnDestroy () {
+  ngOnDestroy () : void {
     this.logged = false;
     if (this.token != '' && this.localStore.getData(this.token) === 'true') {
       this.localStore.saveData(this.token, 'false');
@@ -95,7 +69,7 @@ export class HomeComponent {
     }
   }
 
-  sortTasks (item : string) : void {
+  public sortTasks (item : string) : void {
     switch (item) {
       case 'Task':
         this.sorted[1] = arrors.def; this.sorted[2] = arrors.def;
@@ -150,47 +124,47 @@ export class HomeComponent {
     }
   }
 
-  addTag (i : number, tag : string) : void {
+  public addTag (i : number, tag : string) : void {
     if (tag != this.text.tag_def_opt && !this.tasks[i].tags.includes(tag)) {
       this.tasks[i].tags.push(tag);
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
     }
   }
 
-  deleteTag (i : number, j : number) {
+  public deleteTag (i : number, j : number) : void {
     this.tasks[i].tags.splice(j, 1);
     this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
   }
 
-  changePriority (i : number, prio : string) {
+  public changePriority (i : number, prio : string) : void {
     if (prio != this.text.prio_def_opt) {
       this.tasks[i].priority = prio;
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
     }
   }
 
-  createModal () : void {
-    const DialogRef = this.dialog.open(DialogOverviewDialog, {
+  public createModal () : void {
+    const DialogRef = this.dialog.open(CreateDialogComponent, {
       data: { description: '',
               priority: '',
               time: ''},
     });
 
     DialogRef.afterClosed().subscribe(result => {
-      this.description_modal_create.next(result.description);
-      this.priority_modal_create.next(result.priority);
-      this.time_modal_create.next(result.time);
+      this.descriptionModalCreate.next(result.description);
+      this.priorityModalCreate.next(result.priority);
+      this.timeModalCreate.next(result.time);
 
-      this.tasks.push({ description: this.description_modal_create.value, 
-                        priority: this.priority_modal_create.value, 
-                        time: this.time_modal_create.value,
+      this.tasks.push({ description: this.descriptionModalCreate.value, 
+                        priority: this.priorityModalCreate.value, 
+                        time: this.timeModalCreate.value,
                         tags: ['']});
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
       this.form_create.reset();
     })
   }
 
-  createReactive () : void {
+  public createReactive () : void {
     this.tasks.push({ description: this.form_create.value.description, 
                       priority: this.form_create.value.priority, 
                       time: this.form_create.value.time,
@@ -200,28 +174,28 @@ export class HomeComponent {
     this.createVisible = false;
   }
 
-  changeModal (i : number) : void {
-    const DialogRef = this.dialog_change.open(DialogOverviewDialog_Change, {
+  public changeModal (i : number) : void {
+    const DialogRef = this.dialog_change.open(ChangeDialogComponent, {
       data: { description: '',
               priority: '',
               time: ''},
     });
 
     DialogRef.afterClosed().subscribe(result => {
-      this.description_modal_create.next(result.description);
-      this.priority_modal_create.next(result.priority);
-      this.time_modal_create.next(result.time);
+      this.descriptionModalCreate.next(result.description);
+      this.priorityModalCreate.next(result.priority);
+      this.timeModalCreate.next(result.time);
 
-      this.tasks[i] = { description: this.description_modal_create.value, 
-                        priority: this.priority_modal_create.value, 
-                        time: this.time_modal_create.value,
+      this.tasks[i] = { description: this.descriptionModalCreate.value, 
+                        priority: this.priorityModalCreate.value, 
+                        time: this.timeModalCreate.value,
                         tags: this.tasks[i].tags};
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
       this.form_change.reset();
     })
   }
 
-  changeReactive (i : number) : void {
+  public changeReactive (i : number) : void {
     if (i >= 0 && i < this.tasks.length) {
       this.tasks[i] = { description: this.form_change.value.description, 
                         priority: this.form_change.value.priority, 
@@ -234,7 +208,7 @@ export class HomeComponent {
     }
   }
 
-  deleteItem (i : number) : void {
+  public deleteItem (i : number) : void {
     if (confirm('You want to delete?')) {
       this.tasks.splice(i, 1);
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));

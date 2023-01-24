@@ -2,13 +2,7 @@
 <div *ngIf="!this.logged" class="font">
     {{text.needlogin}}
 </div>
-
-
-
 <div *ngIf="this.logged">
-    <!-- Name: {{name}}
-    Login: {{login}}
-    Tasks: {{t}} -->
     <div *ngIf="this.name != ''" class="font">
         {{text.welcome}} {{name}}
     </div>
@@ -125,7 +119,7 @@
                     <button (click)="changeVisible=!this.changeVisible;
                                      toBeChanged=changeVisible ? i : -1">{{text.reactive}}</button>
                 </td>
-                <td class="border center">
+                <td class="border">
                     <button class="width" (click)="deleteItem(i)">{{text.del}}</button>
                 </td>
             </tr>

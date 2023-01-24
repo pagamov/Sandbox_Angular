@@ -1,36 +1,27 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { LocalService } from '../local.service';
+
+import { Text } from '../app.component'
 
 @Component({
   selector: 'app-sign',
   templateUrl: './sign.component.html',
-  styleUrls: ['./sign.component.css']
+  styleUrls: ['../../styles.css']
 })
 
 export class SignComponent {
   constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router) {}
 
-  text = {
-    name: 'Your name',
-    name_req: 'Nane is required.',
-    user: 'Login',
-    user_req: 'Login is required.',
-    pass: 'Password',
-    pass_req: 'Password is required.',
-    sign: 'Sign Up'
-  };
-
+  text = Text.sign;
   name : string = '';
   login : string = '';
   password : string = '';
-
   nameError: boolean = false;
   loginError : boolean = false;
   passwordError : boolean = false;
 
-  hash1() : string {
+  private hash1 () : string {
     const v = '0123456789abcdefghigklmnopqrstuvwxyz'.split('');
     let res : string = '';
     for (let i = 0; i < 10; i++) {
@@ -39,7 +30,7 @@ export class SignComponent {
     return res;
   }
 
-  createNewUser () : void {
+  public createNewUser () : void {
     if (!this.localStore.getData(this.login)) {
       if (this.login != '' && this.password != '' && this.name != '') {
         const token = this.hash1();

@@ -1,31 +1,24 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalService } from '../local.service';
+import { Text } from '../app.component'
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['../../styles.css']
 })
 
 export class LoginComponent {
   constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router) {}
 
-  text = {
-    username: 'Username',
-    name_req: 'Name is required.',
-    pass: 'Password',
-    pass_req: 'Password is required.',
-    log_in: 'Log in'
-  };
-
+  text = Text.login;
   login : string = '';
   password : string = '';
-
   loginError : boolean = false;
   passwordError : boolean = false;
 
-  hash1() : string {
+  private hash1 () : string {
     const v = '0123456789abcdefghigklmnopqrstuvwxyz'.split('');
     let res : string = '';
     for (let i = 0; i < 10; i++) {
@@ -34,7 +27,7 @@ export class LoginComponent {
     return res;
   }
 
-  logIn() : void {
+  public logIn () : void {
     if (this.localStore.getData(this.login) === this.password) {
       const token = this.hash1();
       this.localStore.saveData(token, 'true');
@@ -47,7 +40,6 @@ export class LoginComponent {
         alert('No user with this login');
       }
     } else {
-      // password incorect
       alert('Incorect password');
     }
   }
