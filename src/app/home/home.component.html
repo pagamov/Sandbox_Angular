@@ -1,10 +1,10 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block" rel="stylesheet">
-<div *ngIf="!this.logged" class="font">
+<div *ngIf="!logged" class="font">
     {{text.needlogin}}
 </div>
-<div *ngIf="this.logged">
-    <div *ngIf="this.name != ''" class="font">
-        {{text.welcome}} {{name}}
+<div *ngIf="logged">
+    <div *ngIf="name.getValue() != ''" class="font">
+        {{text.welcome}} {{name.getValue()}}
     </div>
     <div class="pad font">
         {{text.cwith}}
@@ -12,7 +12,7 @@
         <button (click)="this.createVisible=!this.createVisible">{{text.reactive}}</button>
     </div>
     <div *ngIf="this.createVisible" class="pad font">
-        <form [formGroup]="form_create" (submit)="createReactive()">
+        <form [formGroup]="formCreate" (submit)="createReactive()">
             <table>
                 <tr>
                     <td>{{text.task}}</td>
@@ -32,7 +32,7 @@
                     <td>{{text.time}}</td>
                     <td><input formControlName="time"/></td>
                 </tr>
-                <tr *ngIf="this.form_create.valid">
+                <tr *ngIf="this.formCreate.valid">
                     <td></td>
                     <td><button type="submit">{{text.submit}}</button></td>
                 </tr>
@@ -41,7 +41,7 @@
     </div>
 
     <div *ngIf="changeVisible" class="pad font">
-        <form [formGroup]="form_change" (submit)="changeReactive(toBeChanged)">
+        <form [formGroup]="formChange" (submit)="changeReactive(toBeChanged)">
             <table>
                 <tr>
                     <td>{{text.task}}</td>
@@ -61,7 +61,7 @@
                     <td>{{text.time}}</td>
                     <td><input formControlName="time"/></td>
                 </tr>
-                <tr *ngIf="form_change.valid">
+                <tr *ngIf="formChange.valid">
                     <td></td>
                     <td><button type="submit">{{text.submit}}</button></td>
                 </tr>

@@ -16,12 +16,12 @@ import { ChangeDialogComponent } from './change-dialog/change-dialog.component';
 })
 export class HomeComponent {
   constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router, fb: FormBuilder, public dialog: MatDialog, public dialog_change: MatDialog) {
-    this.form_create = fb.group({
+    this.formCreate = fb.group({
       description: ['', [Validators.required]],
       priority: ['', [Validators.required]],
       time: ['', [Validators.required]]
     });
-    this.form_change = fb.group({
+    this.formChange = fb.group({
       description: ['', [Validators.required]],
       priority: ['', [Validators.required]],
       time: ['', [Validators.required]]
@@ -31,11 +31,11 @@ export class HomeComponent {
   public text = Text.home;
   public options = Options;
   public tags = Tags;
-  public form_create: FormGroup;
-  public form_change : FormGroup;
-  public name : string = '';
-  public login : string = '';
-  public token : string = '';
+  public formCreate: FormGroup;
+  public formChange : FormGroup;
+  public name = new BehaviorSubject<string>('');
+  private login = new BehaviorSubject<string>('');
+  private token = new BehaviorSubject<string>('');
   public logged : boolean = false;
   public sorted = [arrors.def, arrors.def, arrors.def];
   public createVisible : boolean = false;
@@ -50,21 +50,21 @@ export class HomeComponent {
 
   ngOnInit () : void {
     this.route.queryParamMap.subscribe(params => {
-        this.login = params.get('UserLogin') || '';
-        this.token = params.get('token') || '';
+        this.login.next(params.get('UserLogin') || '');
+        this.token.next(params.get('token') || '');
       }
     );
-    if (this.login != '' && this.localStore.getData(this.token) === 'true') {
+    if (this.login.getValue() != '' && this.localStore.getData(this.token.getValue()) === 'true') {
       this.logged = true;
-      this.name = this.localStore.getData(this.login + 'name') || '';
+      this.name.next(this.localStore.getData(this.login + 'name') || '');
       this.tasks = JSON.parse(this.localStore.getData(this.login + 'data') || '');
     }
   }
 
   ngOnDestroy () : void {
     this.logged = false;
-    if (this.token != '' && this.localStore.getData(this.token) === 'true') {
-      this.localStore.saveData(this.token, 'false');
+    if (this.token.getValue() != '' && this.localStore.getData(this.token.getValue()) === 'true') {
+      this.localStore.saveData(this.token.getValue(), 'false');
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
     }
   }
@@ -160,17 +160,17 @@ export class HomeComponent {
                         time: this.timeModalCreate.value,
                         tags: ['']});
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
-      this.form_create.reset();
+      this.formCreate.reset();
     })
   }
 
   public createReactive () : void {
-    this.tasks.push({ description: this.form_create.value.description, 
-                      priority: this.form_create.value.priority, 
-                      time: this.form_create.value.time,
+    this.tasks.push({ description: this.formCreate.value.description, 
+                      priority: this.formCreate.value.priority, 
+                      time: this.formCreate.value.time,
                       tags: ['']});
     this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
-    this.form_create.reset();
+    this.formCreate.reset();
     this.createVisible = false;
   }
 
@@ -191,18 +191,18 @@ export class HomeComponent {
                         time: this.timeModalCreate.value,
                         tags: this.tasks[i].tags};
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
-      this.form_change.reset();
+      this.formChange.reset();
     })
   }
 
   public changeReactive (i : number) : void {
     if (i >= 0 && i < this.tasks.length) {
-      this.tasks[i] = { description: this.form_change.value.description, 
-                        priority: this.form_change.value.priority, 
-                        time: this.form_change.value.time,
+      this.tasks[i] = { description: this.formChange.value.description, 
+                        priority: this.formChange.value.priority, 
+                        time: this.formChange.value.time,
                         tags: this.tasks[i].tags}
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
-      this.form_change.reset();
+      this.formChange.reset();
       this.changeVisible = false;
       this.toBeChanged = -1;
     }
