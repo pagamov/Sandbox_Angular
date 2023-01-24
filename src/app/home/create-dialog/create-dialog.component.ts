@@ -30,7 +30,7 @@ export class CreateDialogComponent {
 
   public onClick () : void {
     this.dialogRef.close({  description: this.formCreate.get('description')?.value,
-                              priority: this.formCreate.get('priority')?.value,
-                              time: this.formCreate.get('time')?.value});
+                            priority: this.formCreate.get('priority')?.value,
+                            time: this.formCreate.get('time')?.value});
   }
 }

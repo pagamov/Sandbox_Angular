@@ -43,10 +43,6 @@ export class HomeComponent {
   public changePriorityVisible : boolean = false;
   public toBeChanged : number = -1;
   public tasks = [{description: '', priority: '', time: '', tags: ['']}];
-  private descriptionModalCreate = new BehaviorSubject<string>('');
-  private priorityModalCreate = new BehaviorSubject<string>('');
-  private timeModalCreate = new BehaviorSubject<string>('');
-
 
   ngOnInit () : void {
     this.route.queryParamMap.subscribe(params => {
@@ -151,13 +147,7 @@ export class HomeComponent {
     });
 
     DialogRef.afterClosed().subscribe(result => {
-      this.descriptionModalCreate.next(result.description);
-      this.priorityModalCreate.next(result.priority);
-      this.timeModalCreate.next(result.time);
-
-      this.tasks.push({ description: this.descriptionModalCreate.value, 
-                        priority: this.priorityModalCreate.value, 
-                        time: this.timeModalCreate.value,
+      this.tasks.push({ ...result,
                         tags: ['']});
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
       this.formCreate.reset();
@@ -182,13 +172,7 @@ export class HomeComponent {
     });
 
     DialogRef.afterClosed().subscribe(result => {
-      this.descriptionModalCreate.next(result.description);
-      this.priorityModalCreate.next(result.priority);
-      this.timeModalCreate.next(result.time);
-
-      this.tasks[i] = { description: this.descriptionModalCreate.value, 
-                        priority: this.priorityModalCreate.value, 
-                        time: this.timeModalCreate.value,
+      this.tasks[i] = { ...result,
                         tags: this.tasks[i].tags};
       this.localStore.saveData(this.login + 'data', JSON.stringify(this.tasks));
       this.formChange.reset();
