@@ -173,8 +173,8 @@ export class HomeComponent {
 
   public createModal () : void {
     const DialogRef = this.dialog.open(CreateDialogComponent, {
-      disableClose: false,
-      autoFocus: false,
+      disableClose: true,
+      autoFocus: true,
       data: { description: '', priority: '', time: '' }, 
     });
 
