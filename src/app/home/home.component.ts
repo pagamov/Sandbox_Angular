@@ -64,14 +64,15 @@ export class HomeComponent {
     );
     if (this.login.getValue() != '' && this.localStore.getData(this.token.getValue()) === 'true') {
       this.logged = true;
-      this.name.next(this.localStore.getData(this.login + 'name') || '');
-      this.tasks.next(JSON.parse(this.localStore.getData(this.login + 'data') || ''));
-      if (this.localStore.getData(this.login + 'tags')) {
-        this.tags.next(JSON.parse(this.localStore.getData(this.login + 'tags') || ''));
+      this.name.next(this.localStore.getData(this.login.getValue() + 'name') || '');
+      this.tasks.next(JSON.parse(this.localStore.getData(this.login.getValue() + 'data') || ''));
+      if (this.localStore.getData(this.login.getValue() + 'tags')) {
+        this.tags.next(JSON.parse(this.localStore.getData(this.login.getValue() + 'tags') || ''));
+      }
+      if (this.localStore.getData(this.login.getValue() + 'options')) {
+        this.options.next(JSON.parse(this.localStore.getData(this.login.getValue() + 'options') || ''));
       }
     }
-
-    // this.localStore.clearData();
   }
 
   ngOnDestroy () : void {

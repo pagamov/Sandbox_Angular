@@ -4,7 +4,7 @@
 </div>
 <div *ngIf="logged">
     <div *ngIf="name.getValue() != ''" class="fontSize">
-        {{text.welcome}} {{name.getValue()}}
+        {{text.welcome}} {{name | async}}
     </div>
     <div class="padingTop fontSize">
         {{text.cwith}}

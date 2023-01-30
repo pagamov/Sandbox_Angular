@@ -43,7 +43,7 @@ export class SignComponent {
         this.localStore.saveData(token, 'true');
         this.localStore.saveData(this.formSign.get('login')?.value, this.formSign.get('password')?.value);
         this.localStore.saveData(this.formSign.get('login')?.value + 'name', this.formSign.get('name')?.value);
-        const def_arr = [{description: 'Ваш первый таск!', priority: 'Укажите важность задачи!', time: 'Тут можно поставить время!', tags: ['']}];
+        const def_arr = [{description: 'Ваш первый таск!', priority: 'Укажите важность задачи!', time: 'Тут можно поставить время!', tags: []}];
         this.localStore.saveData(this.formSign.get('login')?.value + 'data', JSON.stringify(def_arr));
         this.router.navigate(['/home'], { queryParams: { UserLogin: this.formSign.get('login')?.value, token: token } });
       } else {
