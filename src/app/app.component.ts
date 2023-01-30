@@ -7,6 +7,10 @@ export interface Task {
   tags: string[]
 };
 
+// export interface Tag {
+//   tag : string;
+// };
+
 export const Tags = ['Работа', 'Дом', 'Семья', 'Здоровье'];
 
 export const Options = ['Важно', 'Важно но лень', 'Не важно'];
@@ -37,7 +41,11 @@ export const Text = {
     tag_def_opt: 'Pick a tag',
     prio_def_opt: 'Change a priority',
     plus: '+',
-    minus: '-'
+    minus: '-',
+    deleteTag: 'delete tag',
+    addNewTag: 'add new tag',
+    deletePriority: 'delete priority',
+    addNewPriority: 'add new priority',
   },
   login: {
     username: 'Username',
@@ -48,7 +56,7 @@ export const Text = {
   },
   sign: {
     name: 'Your name',
-    name_req: 'Nane is required.',
+    name_req: 'Name is required.',
     user: 'Login',
     user_req: 'Login is required.',
     pass: 'Password',
@@ -73,6 +81,10 @@ export const Text = {
     home: 'Home',
     login: 'Login',
     sign: 'Sign'
+  },
+  delete_dialog: {
+    cancel: 'Не удалять',
+    submit: 'Удалить'
   }
 };
 

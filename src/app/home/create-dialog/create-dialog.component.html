@@ -1,30 +1,30 @@
 <div mat-dialog-content>
-    <form [formGroup]="formCreate">
-      <table>
-        <tr>
-          <td>{{ text.description }}</td>
-          <td><input formControlName="description"></td>
-        </tr>
-        <tr>
-          <td>{{ text.priority }}</td>
-          <td>
-            <select formControlName="priority" #prio name="" id="">
-              <option *ngFor="let opt of this.options" value="{{opt}}">
-                  {{opt}}
-              </option>
-          </select>
-          </td>
-        </tr>
-        <tr>
-          <td>{{ text.time }}</td>
-          <td><input formControlName="time"></td>
-        </tr>
-      </table>
-    </form>
+  <form [formGroup]="formCreate">
+    <table>
+      <tr>
+        <td>{{ text.description }}</td>
+        <td><input formControlName="description"></td>
+      </tr>
+      <tr>
+        <td>{{ text.priority }}</td>
+        <td>
+          <select formControlName="priority" #prio name="" id="">
+            <option *ngFor="let opt of this.options" value="{{opt}}">
+                {{opt}}
+            </option>
+        </select>
+        </td>
+      </tr>
+      <tr>
+        <td>{{ text.time }}</td>
+        <td><input formControlName="time" type="time"></td>
+      </tr>
+    </table>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">{{ text.cancel }}</button>
+  <div *ngIf="this.formCreate.valid">
+    <button mat-button (click)="onClick()" cdkFocusInitial>{{ text.create }}</button>
   </div>
-  <div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">{{ text.cancel }}</button>
-    <div *ngIf="this.formCreate.valid">
-      <button mat-button (click)="onClick()" cdkFocusInitial>{{ text.create }}</button>
-    </div>
-  </div>
+</div>

@@ -1,41 +1,31 @@
 <div class="fontSize">
-    <div class="width">
-        {{text.name}}
-        <div *ngIf="name_user.errors?.['required'] && this.nameError">
-            {{text.name_req}}
+    <form [formGroup]="formSign" (submit)="createNewUser()">
+        <div class="width">
+            {{text.name}}
+            <div *ngIf="formSign.get('name')?.touched && formSign.get('name')?.invalid">
+                {{text.name_req}}
+            </div>
+            <br>
+            <input class="widthInpDel" type="text" formControlName="name">
         </div>
-        <br>
-        <input  class="widthInpDel"
-                [(ngModel)]="name"
-                type="text" 
-                required 
-                #name_user="ngModel">
-    </div>
-    <div class="width">
-        {{text.user}}
-        <div *ngIf="loginValue.errors?.['required'] && this.loginError">
-            {{text.user_req}}
+        <div class="width">
+            {{text.user}}
+            <div *ngIf="formSign.get('login')?.touched && formSign.get('login')?.invalid">
+                {{text.user_req}}
+            </div>
+            <br>
+            <input class="widthInpDel" type="text" formControlName="login">
         </div>
-        <br>
-        <input  class="widthInpDel"
-                [(ngModel)]="login"
-                type="text" 
-                required 
-                #loginValue="ngModel">
-    </div>
-    <div class="width">
-        {{text.pass}}
-        <div *ngIf="passwordValue.errors?.['required'] && this.passwordError">
-            {{text.pass_req}}
+        <div class="width">
+            {{text.pass}}
+            <div *ngIf="formSign.get('password')?.touched && formSign.get('password')?.invalid">
+                {{text.pass_req}}
+            </div>
+            <br>
+            <input class="widthInpDel" type="password" formControlName="password">
         </div>
-        <br>
-        <input  class="widthInpDel"
-                [(ngModel)]="password" 
-                type="password" 
-                required 
-                #passwordValue="ngModel">
-    </div>
-    <div class="width">
-        <button (click)="createNewUser()">{{text.sign}}</button>
-    </div>
+        <div class="width">
+            <button type="submit">{{text.sign}}</button>
+        </div>
+    </form>
 </div>

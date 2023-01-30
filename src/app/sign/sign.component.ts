@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LocalService } from '../local.service';
 
 import { Text } from '../app.component'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-sign',
@@ -12,14 +13,19 @@ import { Text } from '../app.component'
 
 export class SignComponent {
   public text = Text.sign;
-  public name : string = '';
-  public login : string = '';
-  public password : string = '';
   public nameError: boolean = false;
   public loginError : boolean = false;
   public passwordError : boolean = false;
+  public formSign : FormGroup;
 
-  constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router) {}
+
+  constructor (private localStore: LocalService, private route : ActivatedRoute, private router : Router, fb : FormBuilder) {
+    this.formSign = fb.group({
+      name: ['', [Validators.required]],
+      login: ['', [Validators.required]],
+      password: ['', [Validators.required]]
+    });
+  }
 
   private hash1 () : string {
     const v = '0123456789abcdefghigklmnopqrstuvwxyz'.split('');
@@ -31,26 +37,27 @@ export class SignComponent {
   }
 
   public createNewUser () : void {
-    if (!this.localStore.getData(this.login)) {
-      if (this.login != '' && this.password != '' && this.name != '') {
+    if (!this.localStore.getData(this.formSign.get('login')?.value)) {
+      if (this.formSign.get('login')?.value != '' && this.formSign.get('password')?.value != '' && this.formSign.get('name')?.value != '') {
         const token = this.hash1();
         this.localStore.saveData(token, 'true');
-        this.localStore.saveData(this.login, this.password);
-        this.localStore.saveData(this.login + 'name', this.name);
+        this.localStore.saveData(this.formSign.get('login')?.value, this.formSign.get('password')?.value);
+        this.localStore.saveData(this.formSign.get('login')?.value + 'name', this.formSign.get('name')?.value);
         const def_arr = [{description: 'Ваш первый таск!', priority: 'Укажите важность задачи!', time: 'Тут можно поставить время!', tags: ['']}];
-        this.localStore.saveData(this.login + 'data', JSON.stringify(def_arr));
-        this.router.navigate(['/home'], { queryParams: { UserLogin: this.login, token: token } });
+        this.localStore.saveData(this.formSign.get('login')?.value + 'data', JSON.stringify(def_arr));
+        this.router.navigate(['/home'], { queryParams: { UserLogin: this.formSign.get('login')?.value, token: token } });
       } else {
-        this.loginError = true ? this.login === '' : false;
-        this.passwordError = true ? this.password === '' : false;
-        this.nameError = true ? this.name === '' : false;
+        this.loginError = true ? this.formSign.get('login')?.value === '' : false;
+        this.passwordError = true ? this.formSign.get('password')?.value === '' : false;
+        this.nameError = true ? this.formSign.get('name')?.value === '' : false;
       }
-    } else if (this.localStore.getData(this.login) === this.password) {
+    } else if (this.localStore.getData(this.formSign.get('login')?.value) === this.formSign.get('password')?.value) {
       const token = this.hash1();
       this.localStore.saveData(token, 'true');
-      this.router.navigate(['/home'], { queryParams: { UserLogin: this.login, token: token } });
+      this.router.navigate(['/home'], { queryParams: { UserLogin: this.formSign.get('login')?.value, token: token } });
     } else {
       alert('Login already used');
     }
+    this.formSign.reset();
   }
 }

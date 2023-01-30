@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DemoMaterialModule } from './material-module';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -22,15 +23,16 @@ import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { CreateDialogComponent } from './home/create-dialog/create-dialog.component';
 import { ChangeDialogComponent } from './home/change-dialog/change-dialog.component';
+import { DeleteDialogComponent } from './home/delete-dialog/delete-dialog.component';
 
 @NgModule({
   declarations: [ AppComponent, LoginComponent, SignComponent, 
-                  HomeComponent, CreateDialogComponent, ChangeDialogComponent],
+                  HomeComponent, CreateDialogComponent, ChangeDialogComponent, DeleteDialogComponent],
   imports:      [ MatFormFieldModule, MatSlideToggleModule, BrowserModule, 
                   FormsModule, AppRoutingModule, BrowserAnimationsModule, 
                   ReactiveFormsModule, DemoMaterialModule, MatDialogModule, 
                   MatToolbarModule, MatButtonModule, MatInputModule, 
-                  HttpClientModule, MatNativeDateModule, MatRippleModule],
+                  HttpClientModule, MatNativeDateModule, MatRippleModule, NgxMaterialTimepickerModule.setLocale('ar-AE')],
   exports:      [ MatFormFieldModule, MatSlideToggleModule, BrowserModule, 
                   FormsModule, AppRoutingModule, BrowserAnimationsModule, 
                   ReactiveFormsModule, DemoMaterialModule, MatDialogModule, 

@@ -22,7 +22,7 @@
                     <td>{{text.priority}}</td>
                     <td>
                         <select formControlName="priority" #prio name="" id="">
-                            <option *ngFor="let opt of this.options" value="{{opt}}">
+                            <option *ngFor="let opt of this.options | async" value="{{opt}}">
                                 {{opt}}
                             </option>
                         </select>
@@ -51,7 +51,7 @@
                     <td>{{text.priority}}</td>
                     <td>
                         <select formControlName="priority" #prio name="" id="">
-                            <option *ngFor="let opt of this.options" value="{{opt}}">
+                            <option *ngFor="let opt of this.options | async" value="{{opt}}">
                                 {{opt}}
                             </option>
                         </select>
@@ -91,28 +91,36 @@
             <tr *ngFor="let item of this.tasks | async; index as i;">
                 <td class="border">{{item.description}}</td>
                 <td class="border">
-                    {{item.priority}}
-                    <button (click)="changePriority(i, prio.value)">+</button>
-                    <select #prio name="" id="">
-                        <option default>{{text.tag_def_opt}}</option>
-                        <option *ngFor="let opt of this.options" value="{{opt}}">
-                            {{opt}}
-                        </option>
-                    </select>
+                    <table>
+                        <tr>
+                            <button (click)="changePriority(i, prio.value)">+</button>
+                            <select #prio name="" id="">
+                                <option default>{{text.prio_def_opt}}</option>
+                                <option *ngFor="let opt of this.options | async" value="{{opt}}">
+                                    {{opt}}
+                                </option>
+                            </select>
+                        </tr>
+                        <tr>
+                            {{item.priority}}
+                        </tr>
+                    </table>
                 </td>
                 <td class="border">{{ item.time }}</td>
                 <td class="border">
                     <button (click)="addTag(i, opt.value)">{{ text.plus }}</button>
                     <select #opt name="" id="">
                         <option default>{{text.tag_def_opt}}</option>
-                        <option *ngFor="let tag of this.tags" value="{{tag}}">
+                        <option *ngFor="let tag of this.tags | async" value="{{tag}}">
                             {{tag}}
                         </option>
                     </select>
-                    <div *ngFor="let tag of item.tags; index as j">
-                        {{tag}}
-                        <button (click)="deleteTag(i, j)">{{ text.minus }}</button>
-                    </div>
+                    <table>
+                        <tr *ngFor="let tag of item.tags; index as j">
+                            <td>{{tag}}</td>
+                            <td><button (click)="deleteTag(i, j)">{{ text.minus }}</button></td>
+                        </tr>
+                    </table>
                 </td>
                 <td class="border">
                     <button (click)="changeModal(i)">{{text.modal}}</button>
@@ -120,7 +128,71 @@
                                      toBeChanged=changeVisible ? i : -1">{{text.reactive}}</button>
                 </td>
                 <td class="border">
-                    <button class="widthInpDel" (click)="deleteItem(i)">{{text.del}}</button>
+                    <button class="widthInpDel" (click)="deleteDialog(i)">{{text.del}}</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="padingTop">
+        <table class="fontSize">
+            <tr>
+                <td class="right-border bottom-border top-border">
+                    {{text.addNewPriority}}
+                </td>
+                <td colspan="3" class="bottom-border right-border top-border">
+                    <form [formGroup]="formCreatePriority" (submit)="addNewPriority()">
+                        <input formControlName="priority" type="text">
+                        <button type="submit">{{text.plus}}</button>
+                    </form>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="right-border bottom-border">
+                    {{text.deletePriority}}
+                </td>
+                <td colspan="3" class="bottom-border right-border">
+                    <table>
+                        <tr *ngFor="let opt of options | async; index as i;">
+                            <td colspan="2">
+                                {{opt}}
+                            </td>
+                            <td>
+                                <button (click)="deleteOptionGlobal(i)">{{text.minus}}</button>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="right-border bottom-border">
+                    {{text.addNewTag}}
+                </td>
+                <td colspan="3" class="bottom-border right-border">
+                    <form [formGroup]="formCreateTag" (submit)="addNewTag()">
+                        <input formControlName="tag" type="text">
+                        <button type="submit">{{text.plus}}</button>
+                    </form>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="right-border bottom-border">
+                    {{text.deleteTag}}
+                </td>
+                <td colspan="3" class="bottom-border right-border">
+                    <table>
+                        <tr *ngFor="let tag of tags | async; index as i">
+                            <td colspan="2">
+                                {{tag}}
+                            </td>
+                            <td>
+                                <button (click)="deleteTagGlobal(i)">{{text.minus}}</button>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>

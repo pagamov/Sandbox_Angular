@@ -28,3 +28,19 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .padingTop {
     padding-top: 10px;
 }
+
+.center {
+    text-align: center;
+}
+
+.right-border {
+    border-right: 1px solid black;
+}
+
+.bottom-border {
+    border-bottom: 1px solid black;
+}
+
+.top-border {
+    border-top: 1px solid black;
+}
