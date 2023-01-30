@@ -234,8 +234,8 @@ export class HomeComponent {
 
   public deleteDialog (i : number) : void {
     const DialogRef = this.dialog.open(DeleteDialogComponent, {
-      disableClose: false,
-      autoFocus: false,
+      disableClose: true,
+      autoFocus: true,
       data: {}, 
     });
 
